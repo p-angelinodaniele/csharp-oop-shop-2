@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ProdottiEstesi
     
@@ -13,8 +14,9 @@ namespace ProdottiEstesi
         private double ph;
         private string sorgente;
         private double litriNellaBottiglia;
-        public static double GALLONI = 3.785;
-        public static double MAX_LITRI = 1.5;
+        public readonly static double GALLONI = 3.785;
+        public readonly static double MAX_LITRI = 1.5;
+        private double litri;
 
 
 
@@ -23,12 +25,20 @@ namespace ProdottiEstesi
 
 
 
-        public Acqua(string nome, string descrizione, double ph, string sorgente,int iva, double prezzo) : base(nome, descrizione, prezzo, iva)
+        public Acqua(string nome, string descrizione, double ph, double litri, string sorgente,int iva, double prezzo) : base(nome, descrizione, prezzo, iva)
         {
-            
+
+
+            if(litri > MAX_LITRI)
+            {
+                Console.WriteLine("Litri massimi per ogni bottiglia 1.5L");
+                Environment.Exit(1);
+            }
+
+            this.litri = litri;
             this.ph = ph;   
             this.sorgente = sorgente; 
-            this.litriNellaBottiglia = MAX_LITRI;
+            this.litriNellaBottiglia = this.litri;
             
 
 
@@ -59,14 +69,17 @@ namespace ProdottiEstesi
         {
             double totaleLitri = litriNellaBottiglia + LitriDaRiempire;
            
-            if (totaleLitri > MAX_LITRI )
+            if (totaleLitri > this.litri || LitriDaRiempire < 0 )
             {
-                Console.WriteLine("Mi dispiace i litri che vuoi aggiungere superano i litri della bottiglia");
+                Console.WriteLine("Mi dispiace i litri che vuoi aggiungere superano i litri della bottiglia o hai messo un numero minore di zero");
+                
 
             }
             else
             {
                 litriNellaBottiglia = totaleLitri;
+                Console.WriteLine("Ho riempito la bottiglia di: " + litriNellaBottiglia + " litri");
+
             }
 
         }
